@@ -58,139 +58,139 @@ CREATE TABLE Cliente (
 ) ENGINE = InnoDB;
 
 CREATE TABLE Plazo_Fijo (
-    nro_plazo
-    capital
-    fecha_inicio
-    fecha_fin
-    tasa_interes
-    interes
-    nro_suc
+    nro_plazo INT,
+    capital DECIMAL(4, 2),
+    fecha_inicio DATE,
+    fecha_fin DATE,
+    tasa_interes DECIMAL(4, 2),
+    interes DECIMAL(4, 2),
+    nro_suc INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Tasa_Plazo_Fijo (
-    periodo
-    monto inf
-    monto sup
-    tasa
+    periodo INT,
+    monto_inf DECIMAL(4, 2),
+    monto_sup DECIMAL(4, 2),
+    tasa DECIMAL(4, 2),
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Plazo_Cliente (
-    nro plazo
-    nro cliente
+    nro_plazo INT,
+    nro_cliente INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Prestamo (
-    nro prestamo
-    fecha
-    cant meses
-    monto
-    tasa interes
-    interes
-    valor cuota
-    legajo
-    nro cliente
+    nro_prestamo INT,
+    fecha DATE,
+    cant_meses INT,
+    monto DECIMAL(, 2),
+    tasa_interes DECIMAL(, 2),
+    interes DECIMAL(, 2),
+    valor_cuota DECIMAL(, 2),
+    legajo INT,
+    nro_cliente INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Pago (
-    nro prestamo
-    nro pago
-    fecha venc
-    fecha pago
+    nro_prestamo INT,
+    nro_pago DECIMAL(, 2),
+    fecha_venc DATE,
+    fecha_pago DATE,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Tasa_Prestamo (
-    periodo
-    monto inf
-    monto sup
-    tasa
+    periodo INT,
+    monto_inf DECIMAL(, 2),
+    monto_sup DECIMAL(, 2),
+    tasa DECIMAL(, 2),
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Caja_Ahorro (
-    nro ca
-    CBU
-    saldo
+    nro_ca INT,
+    CBU LONG,
+    saldo DECIMAL(, 2),
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Cliente_CA (
-    nro cliente
-    nro ca
+    nro_cliente INT,
+    nro_ca INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Tarjeta (
-    nro tarjeta
-    PIN
-    CVT
-    fecha venc
-    nro cliente
-    nro ca
+    nro_tarjeta LONG,
+    PIN VARCHAR(32),
+    CVT VARCHAR(32),
+    fecha_venc DATE,
+    nro_cliente INT,
+    nro_ca INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Caja (
-    cod caja
+    cod_caja INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Ventanilla (
-    cod caja
-    nro suc
+    cod_caja INT,
+    nro_suc INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE ATM (
-    cod caja
-    cod postal
-    direccion
+    cod_caja INT,
+    cod_postal INT,
+    direccion VARCHAR(32),
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Transaccion (
-    nro trans
-    fecha
-    hora
-    monto
+    nro_trans INT,
+    fecha DATE,
+    hora TIME,
+    monto DECIMAL(, 2),
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Debito (
-    nro trans
-    descripcion
-    nro cliente
-    nro ca
+    nro_trans INT,
+    descripcion VARCHAR(128),
+    nro_cliente INT,
+    nro_ca INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Transaccion_por_caja (
-    nro trans
-    cod caja
+    nro_trans INT,
+    cod_caja INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Deposito (
-    nro trans
-    nro ca
+    nro_trans INT,
+    nro_ca INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Extraccion (
-    nro trans
-    nro cliente
-    nro ca
+    nro_trans INT,
+    nro_cliente INT,
+    nro_ca INT,
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Transferencia (
-    nro trans
-    nro cliente
-    origen
-    destino
+    nro_trans INT,
+    nro_cliente INT,
+    origen INT,
+    destino INT,
     
 ) ENGINE = InnoDB;
