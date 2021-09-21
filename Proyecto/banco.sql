@@ -267,26 +267,78 @@ CREATE TABLE Debito (
     nro_trans INT,
     descripcion VARCHAR(128),
     nro_cliente INT,
-    nro_ca INT
+    nro_ca INT,
+		
+		CONSTRAINT pk_debito
+		PRIMARY KEY (nro_trans),
+		
+		CONSTRAINT fk_debito_transaccion
+		FOREIGN KEY (nro_trans) REFERENCES Transaccion(nro_trans)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+		
+		CONSTRAINT fk_debito_cliente
+		FOREIGN KEY (nro_cliente) REFERENCES Cliente(nro_cliente)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+		
+		CONSTRAINT fk_debito_cajaahorro
+		FOREIGN KEY (nro_ca) REFERENCES Caja_Ahorro(nro_ca)
+		ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Transaccion_por_caja (
     nro_trans INT,
-    cod_caja INT
+    cod_caja INT,
+		
+		CONSTRAINT pk_transaccion_por_caja
+		PRIMARY KEY (nro_trans),
+		
+		CONSTRAINT fk_transaccionporcaja_transaccion
+		FOREIGN KEY (nro_trans) REFERENCES Transaccion(nro_trans)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+		
+		CONSTRAINT fk_transaccionporcaja_caja
+		FOREIGN KEY (cod_caja) REFERENCES Caja(cod_caja)
+		ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Deposito (
     nro_trans INT,
-    nro_ca INT
+    nro_ca INT,
+		
+		CONSTRAINT pk_deposito
+		PRIMARY KEY (nro_trans),
+		
+		CONSTRAINT fk_deposito_transaccion
+		FOREIGN KEY (nro_trans) REFERENCES Transaccion_por_caja(nro_trans)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+		
+		CONSTRAINT fk_deposito_cajaahorro
+		FOREIGN KEY (nro_ca) REFERENCES Caja_Ahorro(nro_ca)
+		ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE = InnoDB;
 
 CREATE TABLE Extraccion (
     nro_trans INT,
     nro_cliente INT,
-    nro_ca INT
+    nro_ca INT,
+		
+		CONSTRAINT pk_extraccion
+		PRIMARY KEY (nro_trans),
+		
+		CONSTRAINT fk_extraccion_transaccion
+		FOREIGN KEY (nro_trans) REFERENCES Transaccion_por_caja(nro_trans)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+		
+		CONSTRAINT fk_extraccion_cliente
+		FOREIGN KEY (nro_cliente) REFERENCES Cliente(nro_cliente)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+		
+		CONSTRAINT fk_extraccion_cajaahorro
+		FOREIGN KEY (nro_ca) REFERENCES Caja_Ahorro(nro_ca)
+		ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE = InnoDB;
 
@@ -294,7 +346,26 @@ CREATE TABLE Transferencia (
     nro_trans INT,
     nro_cliente INT,
     origen INT,
-    destino INT
+    destino INT,
+		
+		CONSTRAINT pk_transferencia
+		PRIMARY KEY (nro_trans),
+		
+		CONSTRAINT fk_transferencia_transaccion
+		FOREIGN KEY (nro_trans) REFERENCES Transaccion_por_caja(nro_trans)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+		
+		CONSTRAINT fk_transferencia_cliente
+		FOREIGN KEY (nro_cliente) REFERENCES Cliente(nro_cliente)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+		
+		CONSTRAINT fk_transferencia_cajaahorro_origen
+		FOREIGN KEY (origen) REFERENCES Caja_Ahorro(nro_ca)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+		
+		CONSTRAINT fk_transferencia_cajaahorro_destino
+		FOREIGN KEY (destino) REFERENCES Caja_Ahorro(nro_ca)
+		ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE = InnoDB;
 
