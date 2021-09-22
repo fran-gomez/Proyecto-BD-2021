@@ -1,5 +1,5 @@
 USE banco;
-
+set dateformat dmy;
 #---------------------------------------------------------------------#
 #ELIMINACIONES:
 
@@ -83,7 +83,7 @@ VALUES (0006,'Alvarez','Damian','DNI', 43218765, 'Allem 6', '666666', 'administr
 
 
 #-------------------------Cliente----------------------------------#
-set dateformat dmy;
+
 
 INSERT INTO Cliente(nro_cliente, apellido, nombre, tipo_doc, nro_doc, direccion, telefono, fecha_nac)
 VALUES (00001, 'Olivarez','Javier','DNI', 28351947, 'Chiclana 121', '123123','18-12-1990');
@@ -94,7 +94,6 @@ VALUES (00003, 'Hernandez','Guillermo','DNI', 21231947, 'Juan Molina 121', '9872
 
 #-------------------------Plazo_Fijo----------------------------------#
 
-set dateformat dmy;
 
 INSERT INTO Plazo_Fijo(nro_plazo, capital, fecha_inicio, fecha_fin, tasa_interes, interes, nro_suc)
 VALUES (11111111, 1000.00, '10-06-2021', '10-07-2021', 10.00, 100.00, 001);
@@ -119,7 +118,7 @@ INSERT INTO Plazo_Cliente(nro_plazo, nro_cliente)
 VALUES (22222222, 00002);
 
 #-------------------------Prestamo---------------------------------#
-set dateformat dmy;
+
 
 INSERT INTO Prestamo(nro_prestamo, fecha, cant_meses, monto, tasa_interes, interes, valor_cuota, legajo, nro_cliente) 
 VALUES (12345678, '10-10-2020', 22, 1000.00, 10.00, 100.00, 50.00, 0001, 00002);
@@ -160,3 +159,118 @@ VALUES (00003, 33345678);
 
 
 #-------------------------Tarjeta----------------------------------#
+
+INSERT INTO Tarjeta(nro_tarjeta, PIN, CVT, fecha_venc, nro_cliente, nro_ca)
+VALUES (0123456789123456, md5('1234'), md5('adse'), '23-04-25',00001, 12345678 );
+INSERT INTO Tarjeta(nro_tarjeta, PIN, CVT, fecha_venc, nro_cliente, nro_ca)
+VALUES (1123456789123456, md5('2345'), md5('fdas'), '28-05-22',00002, 22345678 );
+INSERT INTO Tarjeta(nro_tarjeta, PIN, CVT, fecha_venc, nro_cliente, nro_ca)
+VALUES (2123456789123456, md5('3456'), md5('efds'), '03-08-24',00003, 33345678 );
+
+#-------------------------Caja----------------------------------#
+
+
+INSERT INTO Caja(cod_caja)
+VALUES (12345);
+INSERT INTO Caja(cod_caja)
+VALUES (22345);
+INSERT INTO Caja(cod_caja)
+VALUES (32345);
+INSERT INTO Caja(cod_caja)
+VALUES (42345);
+INSERT INTO Caja(cod_caja)
+VALUES (52345);
+INSERT INTO Caja(cod_caja)
+VALUES (62345);
+
+
+#-------------------------Ventanilla----------------------------------#
+
+
+INSERT INTO Ventanilla(cod_caja, nro_suc)
+VALUES (12345, 001);
+INSERT INTO Ventanilla(cod_caja, nro_suc)
+VALUES (22345, 002);
+INSERT INTO Ventanilla(cod_caja, nro_suc)
+VALUES (32345, 002);
+
+
+#-------------------------ATM----------------------------------#
+
+
+INSERT INTO ATM(cod_caja, cod_postal, direccion)
+VALUES (42345, 5500, 'Dambo 454' );
+INSERT INTO ATM(cod_caja, cod_postal, direccion)
+VALUES (52345, 3300, 'Alvarado 100' );
+INSERT INTO ATM(cod_caja, cod_postal, direccion)
+VALUES (62345, 3300, 'Rodriguez 20' );
+
+
+#-------------------------Transaccion----------------------------------#
+
+
+INSERT INTO Transaccion(nro_trans, fecha, hora, monto)
+VALUES (0000000001, '01-02-21', '10:00:00', 1234.00);
+INSERT INTO Transaccion(nro_trans, fecha, hora, monto)
+VALUES (0000000002, '12-04-21', '13:00:00', 14.00);
+INSERT INTO Transaccion(nro_trans, fecha, hora, monto)
+VALUES (0000000003, '12-04-21', '13:04:00', 122222.00);
+
+
+#-------------------------Debito----------------------------------#
+
+
+INSERT INTO Debito(nro_trans, descripcion, nro_cliente, nro_ca)
+VALUES (0000000001, 'Varios', 00001, 12345678);
+INSERT INTO Debito(nro_trans, descripcion, nro_cliente, nro_ca)
+VALUES (0000000002, 'Alquiler', 00002, 22345678);
+INSERT INTO Debito(nro_trans, descripcion, nro_cliente, nro_ca)
+VALUES (0000000003, 'Mercado', 00003, 33345678);
+
+
+#-------------------------Transaccion_por_caja----------------------------------#
+
+
+INSERT INTO Transaccion_por_caja(nro_trans, cod_caja)
+VALUES (0000000004, 12345);
+INSERT INTO Transaccion_por_caja(nro_trans, cod_caja)
+VALUES (0000000005, 22345);
+INSERT INTO Transaccion_por_caja(nro_trans, cod_caja)
+VALUES (0000000006, 32345);
+INSERT INTO Transaccion_por_caja(nro_trans, cod_caja)
+VALUES (0000000007, 12345);
+INSERT INTO Transaccion_por_caja(nro_trans, cod_caja)
+VALUES (0000000008, 22345);
+INSERT INTO Transaccion_por_caja(nro_trans, cod_caja)
+VALUES (0000000009, 32345);
+
+
+#-------------------------Deposito----------------------------------#
+
+
+INSERT INTO Deposito(nro_trans, nro_ca)
+VALUES (0000000004, 12345);
+INSERT INTO Deposito(nro_trans, nro_ca)
+VALUES (0000000005, 22345);
+
+
+#-------------------------Extraccion----------------------------------#
+
+
+INSERT INTO Extraccion(nro_trans, nro_cliente, nro_ca)
+VALUES (0000000006, 00001, 12345678);
+INSERT INTO Deposito(nro_trans, nro_cliente, nro_ca)
+VALUES (0000000007, 00002, 22345678);
+
+
+#-------------------------Transferencia----------------------------------#
+
+
+INSERT INTO Transferencia(nro_trans, nro_cliente, origen, destino)
+VALUES (0000000008, 00001, 12345678, 22345678);
+INSERT INTO Transferencia(nro_trans, nro_cliente, origen, destino)
+VALUES (0000000009, 00002, 22345678, 32345678);
+
+
+
+#------------------------------------------------------------------------#
