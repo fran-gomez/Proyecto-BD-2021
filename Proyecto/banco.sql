@@ -386,10 +386,46 @@ GRANT SELECT, INSERT, UPDATE ON banco.Cliente_CA TO 'empleado'@'%';
 GRANT SELECT, INSERT, UPDATE ON banco.Cliente TO 'empleado'@'%';
 GRANT SELECT, INSERT, UPDATE ON banco.Pago TO 'empleado'@'%';
 
-#CREATE VIEW trans_caja_ahorro AS
-#    SELECT nro_ca, saldo, nro_trans, ..., nro_cliente, tipo_doc, nro_doc, nombre, apellido
-#    FROM Caja_Ahorro NATURAL JOIN (...) NATURAL JOIN Cliente
-#    WHERE 
+
+/*  se generan modularmente las 4 vistas y las unimos en trans_caja_ahorro
+
+CREATE VIEW Debitos AS
+    SELECT nro_ca, saldo, ..., NULL AS destino, "DEBITO" AS tipo
+    FROM Debito...
+	
+CREATE VIEW Transferencias AS
+    SELECT nro_ca, saldo, ..., debito, "TRANSFERENCIA" AS TIPO
+    FROM Transferencia...
+	
+CREATE VIEW Depositos AS 
+	SELECT	... , "DEPOSITOS" AS TIPO
+	FROM Deposito...
+
+CREATE VIEW Extracciones AS 
+	SELECT  ... , "EXTRACCIONES" AS TIPO
+	FROM Extracciones...
+	
+	
+CREATE VIEW trans_caja_ahorro
+
+	SELECT * FROM Debitos
+	UNION
+	SELECT * FROM Transferencias
+	UNION
+	SELECT * FROM Depositos
+	UNION
+	SELECT * FROM Extracciones
+	
+
+*/
+
+
+/*
+CREATE VIEW trans_caja_ahorro AS
+    SELECT nro_ca, saldo, nro_trans, ..., nro_cliente, tipo_doc, nro_doc, nombre, apellido
+    FROM Caja_Ahorro NATURAL JOIN (...) NATURAL JOIN Cliente
+    WHERE 
+*/
 
 CREATE USER 'atm'@'%' IDENTIFIED BY 'atm';
 #GRANT SELECT ON trans_caja_ahorro TO 'atm'@'%';
