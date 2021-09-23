@@ -2,10 +2,9 @@ drop database banco;
 CREATE DATABASE banco;
 
 USE banco;
-
-DROP USER 'atm'@'%';
-DROP USER 'empleado'@'%';
 DROP USER 'admin'@'localhost';
+DROP USER 'empleado'@'%';
+DROP USER 'atm'@'%';
 FLUSH PRIVILEGES;
 
 CREATE TABLE Ciudad (
@@ -28,7 +27,7 @@ CREATE TABLE Sucursal (
 		PRIMARY KEY (nro_suc),
 		
 		CONSTRAINT fk_sucursal_ciudad
-		FOREIGN KEY (cod_postal) REFERENCES Ciudad(cod_post)
+		FOREIGN KEY (cod_postal) REFERENCES Ciudad(cod_postal)
     
 ) ENGINE = InnoDB;
 
@@ -203,7 +202,7 @@ CREATE TABLE Tarjeta (
 		PRIMARY KEY (nro_tarjeta),
 		
 		CONSTRAINT fk_tarjeta_cliente
-		FOREIGN KEY (nro_cliente,nro_ca) REFERENCES Cliente_CA(nro_cliente)
+		FOREIGN KEY (nro_cliente,nro_ca) REFERENCES Cliente_CA(nro_cliente,nro_ca)
 		ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE = InnoDB;
@@ -276,7 +275,7 @@ CREATE TABLE Debito (
 		ON UPDATE CASCADE ON DELETE CASCADE,
 		
 		CONSTRAINT fk_debito_cliente
-		FOREIGN KEY (nro_cliente,nro_ca) REFERENCES Cliente_CA(nro_cliente)
+		FOREIGN KEY (nro_cliente,nro_ca) REFERENCES Cliente_CA(nro_cliente,nro_ca)
 		ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE = InnoDB;
@@ -328,7 +327,7 @@ CREATE TABLE Extraccion (
 		ON UPDATE CASCADE ON DELETE CASCADE,
 		
 		CONSTRAINT fk_extraccion_cliente
-		FOREIGN KEY (nro_cliente,nro_ca) REFERENCES Cliente_CA(nro_cliente)
+		FOREIGN KEY (nro_cliente,nro_ca) REFERENCES Cliente_CA(nro_cliente,nro_ca)
 		ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE = InnoDB;
@@ -347,7 +346,7 @@ CREATE TABLE Transferencia (
 		ON UPDATE CASCADE ON DELETE CASCADE,
 		
 		CONSTRAINT fk_transferencia_cliente
-		FOREIGN KEY (nro_cliente,origen) REFERENCES Cliente_CA(nro_cliente)
+		FOREIGN KEY (nro_cliente,origen) REFERENCES Cliente_CA(nro_cliente,nro_ca)
 		ON UPDATE CASCADE ON DELETE CASCADE,
 		
 		CONSTRAINT fk_transferencia_cajaahorro_destino
@@ -374,15 +373,19 @@ GRANT SELECT, INSERT, UPDATE ON banco.Cliente TO 'empleado'@'%';
 GRANT SELECT, INSERT, UPDATE ON banco.Pago TO 'empleado'@'%';
 
 
-/*  se generan modularmente las 4 vistas y las unimos en trans_caja_ahorro
-
-CREATE VIEW Debitos AS
-    SELECT nro_ca, saldo, ..., NULL AS destino, "DEBITO" AS tipo
-    FROM Debito...
+CREATE VIEW trans_debito AS
+	SELECT Debito.nro_ca, saldo, nro_trans, fecha, hora, 'DEBITO' AS tipo, monto, NULL as cod_caja, Debito.nro_cliente, tipo_doc, nro_doc, nombre, apellido, NULL AS destino
+	FROM (Debito NATURAL JOIN Transaccion)
+	INNER JOIN Caja_Ahorro ON Debito.nro_ca=Caja_Ahorro.nro_ca
+	INNER JOIN Cliente ON Debito.nro_cliente=Cliente.nro_cliente;
 	
-CREATE VIEW Transferencias AS
-    SELECT nro_ca, saldo, ..., debito, "TRANSFERENCIA" AS TIPO
-    FROM Transferencia...
+CREATE VIEW trans_transferencias AS
+    SELECT Transferencia.origen, saldo, nro_trans, fecha, hora, 'TRANSFERENCIA' AS tipo, monto, NULL as cod_caja, Transferencia.nro_cliente, tipo_doc, nro_doc, nombre, apellido, Transferencia.destino AS destino
+    FROM (Transferencia NATURAL JOIN Transaccion)
+		INNER JOIN Caja_Ahorro ON Transferencia.origen=Caja_Ahorro.nro_ca
+		INNER JOIN Cliente ON Transferencia.nro_cliente=Cliente.nro_cliente;
+		
+/*  se generan modularmente las 4 vistas y las unimos en trans_caja_ahorro
 	
 CREATE VIEW Depositos AS 
 	SELECT	... , "DEPOSITOS" AS TIPO
