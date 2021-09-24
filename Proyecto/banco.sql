@@ -385,30 +385,28 @@ CREATE VIEW trans_transferencias AS
 		INNER JOIN Caja_Ahorro ON Transferencia.origen=Caja_Ahorro.nro_ca
 		INNER JOIN Cliente ON Transferencia.nro_cliente=Cliente.nro_cliente;
 		
-/*  se generan modularmente las 4 vistas y las unimos en trans_caja_ahorro
-	
-CREATE VIEW Depositos AS 
-	SELECT	... , "DEPOSITOS" AS TIPO
-	FROM Deposito...
+CREATE VIEW trans_depositos AS 
+	SELECT Deposito.nro_ca, saldo, Deposito.nro_trans, fecha, hora, 'DEPOSITO' AS tipo, monto, cod_caja, NULL as nro_cliente, NULL as tipo_doc, NULL as nro_doc, NULL AS nombre, NULL AS apellido, NULL AS destino
+	FROM (Deposito NATURAL JOIN Transaccion)
+		INNER JOIN Caja_Ahorro ON Deposito.origen=Caja_Ahorro.nro_ca
+		INNER JOIN Cliente ON Deposito.nro_cliente=Cliente.nro_cliente;
 
-CREATE VIEW Extracciones AS 
-	SELECT  ... , "EXTRACCIONES" AS TIPO
-	FROM Extracciones...
+CREATE VIEW trans_extracciones AS 
+	SELECT Extraccion.nro_ca, saldo, Extraccion.nro_trans, fecha, hora, 'DEPOSITO' AS tipo, monto, cod_caja, Extraccion.nro_cliente, tipo_doc, nro_doc, nombre, apellido, NULL AS destino
+	FROM (Extraccion NATURAL JOIN Transaccion)
+		INNER JOIN Caja_Ahorro ON Extraccion.origen=Caja_Ahorro.nro_ca
+		INNER JOIN Cliente ON Extraccion.nro_cliente=Cliente.nro_cliente;
 	
-	
-CREATE VIEW trans_caja_ahorro
+CREATE VIEW trans_cajas_ahorro
 
-	SELECT * FROM Debitos
+	SELECT * FROM trans_debito
 	UNION
-	SELECT * FROM Transferencias
+	SELECT * FROM trans_transferencias
 	UNION
-	SELECT * FROM Depositos
+	SELECT * FROM trans_depositos
 	UNION
-	SELECT * FROM Extracciones
-	
-
-*/
+	SELECT * FROM trans_extracciones;
 
 CREATE USER 'atm'@'%' IDENTIFIED BY 'atm';
-#GRANT SELECT ON trans_caja_ahorro TO 'atm'@'%';
+GRANT SELECT ON trans_cajas_ahorro TO 'atm'@'%';
 GRANT SELECT, UPDATE ON tarjeta TO 'atm'@'%';
