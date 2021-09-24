@@ -2,12 +2,12 @@ drop database banco;
 CREATE DATABASE banco;
 
 USE banco;
-DROP USER 'admin'@'localhost';
-DROP USER 'empleado'@'%';
-DROP USER 'atm'@'%';
+#DROP USER 'admin'@'localhost';
+#DROP USER 'empleado'@'%';
+#DROP USER 'atm'@'%';
 FLUSH PRIVILEGES;
 
-REATE TABLE Ciudad (
+CREATE TABLE Ciudad (
     cod_postal INT UNSIGNED ,
     nombre VARCHAR(32) NOT NULL,
 		
@@ -27,7 +27,7 @@ CREATE TABLE Sucursal (
 		PRIMARY KEY (nro_suc),
 
 		CONSTRAINT fk_sucursal_ciudad
-		PRIMARY KEY (cod_postal) REFERENCES Ciudad(cod_postal)
+		FOREIGN KEY (cod_postal) REFERENCES Ciudad(cod_postal)
     
 ) ENGINE = InnoDB;
 
@@ -346,7 +346,7 @@ CREATE TABLE Transferencia (
 		ON UPDATE CASCADE ON DELETE CASCADE,
 		
 		CONSTRAINT fk_transferencia_cliente
-		FOREIGN KEY (nro_cliente,origen) REFERENCES Cliente_CA(nro_cliente)
+		FOREIGN KEY (nro_cliente,origen) REFERENCES Cliente_CA(nro_cliente,nro_ca)
 		ON UPDATE CASCADE ON DELETE CASCADE,
 		
 		CONSTRAINT fk_transferencia_cajaahorro_destino
